@@ -2,7 +2,9 @@ import React, { createContext, useContext, useMemo, useState } from 'react';
 
 export type Language = 'ko' | 'en';
 
-type Dictionary = Record<string, string | Dictionary>;
+interface Dictionary {
+  [key: string]: string | Dictionary;
+}
 
 type I18nContextValue = {
   lang: Language;
