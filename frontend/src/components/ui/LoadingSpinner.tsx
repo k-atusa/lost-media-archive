@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useI18n } from '@/lib/i18n';
 
 export default function LoadingSpinner({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
   const sizes = {
@@ -19,10 +20,11 @@ export default function LoadingSpinner({ size = 'md' }: { size?: 'sm' | 'md' | '
 }
 
 export function LoadingPage() {
+  const { t } = useI18n();
   return (
     <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
       <LoadingSpinner size="lg" />
-      <p className="text-dark-400">로딩 중...</p>
+      <p className="text-dark-400">{t('common.loading')}</p>
     </div>
   );
 }

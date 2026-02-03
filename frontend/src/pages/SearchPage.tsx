@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Search, ArrowRight, Clock, TrendingUp, Tag } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
 
 const POPULAR_TAGS = [
   '광고', 'TV', '90년대', '2000년대', '게임', '애니메이션', 
@@ -15,6 +16,7 @@ const RECENT_SEARCHES = [
 export default function SearchPage() {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
+  const { t } = useI18n();
 
   const handleSearch = (searchQuery: string) => {
     if (searchQuery.trim()) {
@@ -34,8 +36,8 @@ export default function SearchPage() {
         animate={{ opacity: 1, y: 0 }}
         className="text-center mb-12"
       >
-        <h1 className="text-4xl font-bold gradient-text mb-4">검색</h1>
-        <p className="text-dark-400">잊혀진 미디어를 찾아보세요.</p>
+        <h1 className="text-4xl font-bold gradient-text mb-4">{t('search.title')}</h1>
+        <p className="text-dark-400">{t('search.subtitle')}</p>
       </motion.div>
 
       {/* Search Form */}
@@ -51,7 +53,7 @@ export default function SearchPage() {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="제목, 태그, 설명으로 검색..."
+          placeholder={t('search.placeholder')}
           className="w-full pl-16 pr-32 py-5 bg-dark-800/50 border-2 border-dark-700 rounded-2xl text-lg text-dark-100 placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all"
           autoFocus
         />
@@ -59,7 +61,7 @@ export default function SearchPage() {
           type="submit"
           className="absolute right-3 top-1/2 -translate-y-1/2 btn btn-primary py-3 px-6"
         >
-          검색
+          {t('common.search')}
           <ArrowRight className="w-5 h-5" />
         </button>
       </motion.form>
@@ -73,7 +75,7 @@ export default function SearchPage() {
       >
         <h2 className="text-lg font-semibold text-dark-100 mb-4 flex items-center gap-2">
           <TrendingUp className="w-5 h-5 text-primary-400" />
-          인기 태그
+          {t('search.popularTags')}
         </h2>
         <div className="flex flex-wrap gap-2">
           {POPULAR_TAGS.map((tag) => (
@@ -96,20 +98,14 @@ export default function SearchPage() {
         transition={{ delay: 0.3 }}
         className="glass-card p-6"
       >
-        <h2 className="text-lg font-semibold text-dark-100 mb-4">💡 검색 팁</h2>
+        <h2 className="text-lg font-semibold text-dark-100 mb-4">{t('search.tipsTitle')}</h2>
         <ul className="space-y-3 text-dark-400 text-sm">
-          <li className="flex items-start gap-2">
-            <span className="text-primary-400">•</span>
-            <span>정확한 제목을 모르면 기억나는 키워드로 검색해보세요.</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-primary-400">•</span>
-            <span>연도나 시대를 함께 검색하면 더 정확한 결과를 얻을 수 있습니다.</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-primary-400">•</span>
-            <span>탐색 페이지에서 미디어 유형별로 필터링할 수 있습니다.</span>
-          </li>
+          {t('search.tips').split('||').map((tip, index) => (
+            <li key={index} className="flex items-start gap-2">
+              <span className="text-primary-400">•</span>
+              <span>{tip}</span>
+            </li>
+          ))}
         </ul>
       </motion.div>
     </div>

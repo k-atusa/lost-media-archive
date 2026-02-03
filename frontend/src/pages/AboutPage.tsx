@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion';
 import { Shield, Globe, Zap, Database, Lock, Users } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
 
 export default function AboutPage() {
+  const { t } = useI18n();
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Hero */}
@@ -11,12 +13,15 @@ export default function AboutPage() {
         className="text-center mb-16"
       >
         <h1 className="text-4xl sm:text-5xl font-bold gradient-text mb-6">
-          Lost Media Archive
+          {t('about.title')}
         </h1>
         <p className="text-xl text-dark-300 leading-relaxed max-w-2xl mx-auto">
-          잊혀진 미디어를 영원히 보존하는
-          <br />
-          분산형 아카이브 프로젝트입니다.
+          {t('about.subtitle').split('\n').map((line, idx) => (
+            <span key={idx}>
+              {line}
+              {idx === 0 && <br />}
+            </span>
+          ))}
         </p>
       </motion.div>
 
@@ -27,15 +32,14 @@ export default function AboutPage() {
         transition={{ delay: 0.1 }}
         className="glass-card p-8 mb-8"
       >
-        <h2 className="text-2xl font-bold text-dark-100 mb-4">📌 미션</h2>
+        <h2 className="text-2xl font-bold text-dark-100 mb-4">{t('about.missionTitle')}</h2>
         <p className="text-dark-300 leading-relaxed">
-          디지털 시대에 수많은 미디어가 생성되고 사라집니다. 
-          TV 광고, 방송 프로그램, 뮤직비디오, 온라인 콘텐츠 등 
-          한때 존재했지만 더 이상 접근할 수 없는 "로스트 미디어"는 
-          문화적, 역사적 가치를 지닙니다.
-          <br /><br />
-          Lost Media Archive는 이러한 미디어를 분산 저장 기술을 활용하여 
-          영구적으로 보존하고, 누구나 접근할 수 있도록 공개하는 것을 목표로 합니다.
+          {t('about.missionBody').split('\n').map((line, idx) => (
+            <span key={idx}>
+              {line}
+              {line === '' ? <><br /><br /></> : <br />}
+            </span>
+          ))}
         </p>
       </motion.section>
 
@@ -46,28 +50,28 @@ export default function AboutPage() {
         transition={{ delay: 0.2 }}
         className="mb-8"
       >
-        <h2 className="text-2xl font-bold text-dark-100 mb-6">🔧 작동 방식</h2>
+        <h2 className="text-2xl font-bold text-dark-100 mb-6">{t('about.howTitle')}</h2>
         <div className="grid md:grid-cols-2 gap-6">
           {[
             {
               icon: Database,
-              title: 'IPFS 저장',
-              description: '모든 미디어는 InterPlanetary File System(IPFS)에 저장됩니다. 콘텐츠 기반 주소 지정을 통해 데이터 무결성이 보장됩니다.',
+              title: t('about.howItems.ipfs.title'),
+              description: t('about.howItems.ipfs.desc'),
             },
             {
               icon: Lock,
-              title: 'CID 보호',
-              description: 'IPFS 콘텐츠 식별자(CID)는 외부에 노출되지 않습니다. 내부 ID 매핑을 통해 프라이버시를 보호합니다.',
+              title: t('about.howItems.cid.title'),
+              description: t('about.howItems.cid.desc'),
             },
             {
               icon: Zap,
-              title: '직접 스트리밍',
-              description: '업로드 시 파일이 서버에 저장되지 않고 직접 IPFS로 스트리밍됩니다. 서버는 파이프 역할만 수행합니다.',
+              title: t('about.howItems.stream.title'),
+              description: t('about.howItems.stream.desc'),
             },
             {
               icon: Globe,
-              title: '분산 네트워크',
-              description: 'IPFS 네트워크의 여러 노드에 복제되어 단일 장애점 없이 안정적으로 서비스됩니다.',
+              title: t('about.howItems.distributed.title'),
+              description: t('about.howItems.distributed.desc'),
             },
           ].map((item, index) => (
             <motion.div
@@ -94,23 +98,23 @@ export default function AboutPage() {
         transition={{ delay: 0.3 }}
         className="glass-card p-8 mb-8"
       >
-        <h2 className="text-2xl font-bold text-dark-100 mb-6">✨ 특징</h2>
+        <h2 className="text-2xl font-bold text-dark-100 mb-6">{t('about.featuresTitle')}</h2>
         <div className="space-y-4">
           {[
             {
               icon: Shield,
-              title: '검열 저항',
-              description: '중앙 서버가 없어 특정 주체에 의한 임의 삭제가 불가능합니다.',
+              title: t('about.features.censorship.title'),
+              description: t('about.features.censorship.desc'),
             },
             {
               icon: Globe,
-              title: '영구 보존',
-              description: '한번 업로드된 콘텐츠는 네트워크가 존재하는 한 영구적으로 보존됩니다.',
+              title: t('about.features.permanent.title'),
+              description: t('about.features.permanent.desc'),
             },
             {
               icon: Users,
-              title: '오픈 아카이브',
-              description: '누구나 미디어를 기여하고 열람할 수 있는 개방형 아카이브입니다.',
+              title: t('about.features.open.title'),
+              description: t('about.features.open.desc'),
             },
           ].map((item) => (
             <div key={item.title} className="flex items-start gap-4">
@@ -133,10 +137,10 @@ export default function AboutPage() {
         transition={{ delay: 0.4 }}
         className="glass-card p-8 mb-8"
       >
-        <h2 className="text-2xl font-bold text-dark-100 mb-6">🛠️ 기술 스택</h2>
+        <h2 className="text-2xl font-bold text-dark-100 mb-6">{t('about.stackTitle')}</h2>
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
-            <h3 className="text-sm font-semibold text-dark-300 uppercase tracking-wider mb-3">Frontend</h3>
+            <h3 className="text-sm font-semibold text-dark-300 uppercase tracking-wider mb-3">{t('about.stackFrontend')}</h3>
             <ul className="space-y-2 text-dark-400">
               <li>• React + TypeScript</li>
               <li>• Vite</li>
@@ -146,7 +150,7 @@ export default function AboutPage() {
             </ul>
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-dark-300 uppercase tracking-wider mb-3">Backend</h3>
+            <h3 className="text-sm font-semibold text-dark-300 uppercase tracking-wider mb-3">{t('about.stackBackend')}</h3>
             <ul className="space-y-2 text-dark-400">
               <li>• Node.js + TypeScript</li>
               <li>• Express</li>
@@ -164,12 +168,11 @@ export default function AboutPage() {
         transition={{ delay: 0.5 }}
         className="glass-card p-8 bg-gradient-to-br from-yellow-500/5 to-orange-500/5 border-yellow-500/20"
       >
-        <h2 className="text-2xl font-bold text-dark-100 mb-4">⚠️ 주의사항</h2>
+        <h2 className="text-2xl font-bold text-dark-100 mb-4">{t('about.disclaimerTitle')}</h2>
         <ul className="space-y-2 text-dark-400 text-sm">
-          <li>• 저작권을 침해하는 콘텐츠의 업로드는 금지됩니다.</li>
-          <li>• 본 아카이브는 문화적, 역사적 보존을 목적으로 합니다.</li>
-          <li>• 업로드된 콘텐츠에 대한 책임은 업로더에게 있습니다.</li>
-          <li>• 문제가 있는 콘텐츠 발견 시 신고해 주세요.</li>
+          {t('about.disclaimer').split('||').map((item, idx) => (
+            <li key={idx}>• {item}</li>
+          ))}
         </ul>
       </motion.section>
     </div>

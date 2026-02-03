@@ -3,11 +3,13 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FolderOpen, Plus, Image as ImageIcon } from 'lucide-react';
 import { collectionApi } from '@/lib/api';
+import { useI18n } from '@/lib/i18n';
 import { LoadingPage } from '@/components/ui/LoadingSpinner';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 import EmptyState from '@/components/ui/EmptyState';
 
 export default function CollectionsPage() {
+  const { t } = useI18n();
   const { data: collections, isLoading, error, refetch } = useQuery({
     queryKey: ['collections'],
     queryFn: () => collectionApi.getAll(),
@@ -17,8 +19,8 @@ export default function CollectionsPage() {
   if (error) {
     return (
       <ErrorMessage
-        title="컬렉션 로드 실패"
-        message="컬렉션 목록을 불러오는 데 실패했습니다."
+        title={t('collections.loadErrorTitle')}
+        message={t('collections.loadErrorMessage')}
         onRetry={refetch}
       />
     );
@@ -33,9 +35,9 @@ export default function CollectionsPage() {
         className="flex items-center justify-between mb-8"
       >
         <div>
-          <h1 className="text-3xl font-bold text-dark-100 mb-2">컬렉션</h1>
+          <h1 className="text-3xl font-bold text-dark-100 mb-2">{t('collections.title')}</h1>
           <p className="text-dark-400">
-            주제별로 큐레이션된 미디어 컬렉션입니다.
+            {t('collections.subtitle')}
           </p>
         </div>
       </motion.div>
@@ -43,9 +45,9 @@ export default function CollectionsPage() {
       {/* Collections Grid */}
       {!collections || collections.length === 0 ? (
         <EmptyState
-          title="컬렉션이 없습니다"
-          message="아직 생성된 컬렉션이 없습니다."
-          actionLabel="탐색하기"
+          title={t('collections.emptyTitle')}
+          message={t('collections.emptyMessage')}
+          actionLabel={t('collections.explore')}
           actionLink="/browse"
         />
       ) : (

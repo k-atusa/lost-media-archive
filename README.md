@@ -1,43 +1,43 @@
 # Lost Media Archive
 
-잊혀진 미디어를 IPFS 기반으로 영구 보존하는 분산형 아카이브 플랫폼입니다.
+A decentralized archive platform that preserves lost media permanently on IPFS.
 
-## 🌟 특징
+## 🌟 Highlights
 
-- **IPFS 기반 저장**: 모든 미디어는 분산 네트워크에 저장됩니다
-- **CID 비공개**: 콘텐츠 식별자를 숨겨 프라이버시를 보호합니다
-- **서버 무저장 업로드**: 파일이 서버 디스크를 거치지 않고 직접 IPFS로 스트리밍됩니다
-- **모던 UI**: React + TailwindCSS로 구현된 고급스러운 인터페이스
+- **IPFS storage**: All media is stored on a distributed network
+- **Hidden CIDs**: Content identifiers are kept private to protect privacy
+- **Zero-disk uploads**: Files stream directly to IPFS without touching server disk
+- **Modern UI**: A premium interface built with React and Tailwind CSS
 
-## 📁 프로젝트 구조
+## 📁 Project Structure
 
 ```
 lost-media-archive/
 ├── backend/               # Node.js + Express + TypeScript
 │   ├── src/
-│   │   ├── db/           # SQLite 데이터베이스
-│   │   ├── routes/       # API 라우트
-│   │   ├── services/     # IPFS, 미디어 서비스
-│   │   └── index.ts      # 서버 엔트리포인트
+│   │   ├── db/           # SQLite database
+│   │   ├── routes/       # API routes
+│   │   ├── services/     # IPFS, media services
+│   │   └── index.ts      # Server entry
 │   └── package.json
 │
 └── frontend/              # Vite + React + TypeScript
     ├── src/
-    │   ├── components/   # UI 컴포넌트
-    │   ├── pages/        # 페이지 컴포넌트
-    │   ├── lib/          # API 클라이언트, 유틸리티
-    │   └── types/        # TypeScript 타입
+    │   ├── components/   # UI components
+    │   ├── pages/        # Pages
+    │   ├── lib/          # API client, utilities
+    │   └── types/        # TypeScript types
     └── package.json
 ```
 
-## 🚀 시작하기
+## 🚀 Getting Started
 
-### 필수 조건
+### Requirements
 
 - Node.js 25.x
-- IPFS 데몬 (go-ipfs)
+- IPFS daemon (go-ipfs)
 
-### IPFS 설치 및 실행
+### Install & Run IPFS
 
 ```bash
 # macOS (Homebrew)
@@ -46,71 +46,71 @@ ipfs init
 ipfs daemon
 ```
 
-### 백엔드 설정
+### Backend Setup
 
 ```bash
 cd backend
 npm install
 
-# 환경 변수 설정
+# Environment variables
 cp .env.example .env
 
-# 개발 서버 실행
+# Start dev server
 npm run dev
 ```
 
-### 프론트엔드 설정
+### Frontend Setup
 
 ```bash
 cd frontend
 npm install
 
-# 개발 서버 실행
+# Start dev server
 npm run dev
 ```
 
-## 🔧 API 엔드포인트
+## 🔧 API Endpoints
 
-### 미디어
+### Media
 
-| Method | Endpoint | 설명 |
-|--------|----------|------|
-| POST | `/api/media/upload` | 미디어 업로드 (IPFS 파이프) |
-| GET | `/api/media` | 미디어 목록 조회 (페이지네이션) |
-| GET | `/api/media/:id` | 미디어 상세 조회 |
-| GET | `/api/media/:id/stream` | 미디어 스트리밍 |
-| GET | `/api/media/recent` | 최근 미디어 |
-| GET | `/api/media/popular` | 인기 미디어 |
-| GET | `/api/media/stats` | 통계 |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/media/upload` | Upload media (IPFS pipe) |
+| GET | `/api/media` | List media (pagination) |
+| GET | `/api/media/:id` | Media details |
+| GET | `/api/media/:id/stream` | Stream media |
+| GET | `/api/media/recent` | Recent media |
+| GET | `/api/media/popular` | Popular media |
+| GET | `/api/media/stats` | Stats |
 
-### 컬렉션
+### Collections
 
-| Method | Endpoint | 설명 |
-|--------|----------|------|
-| GET | `/api/collections` | 컬렉션 목록 |
-| POST | `/api/collections` | 컬렉션 생성 |
-| GET | `/api/collections/:id` | 컬렉션 상세 |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/collections` | List collections |
+| POST | `/api/collections` | Create collection |
+| GET | `/api/collections/:id` | Collection details |
 
-## 💡 업로드 방식
+## 💡 Upload Flow
 
-서버는 파일을 디스크에 저장하지 않고 직접 IPFS로 파이프합니다:
+The server never stores files on disk. It streams directly to IPFS:
 
 ```typescript
-// 클라이언트 → 서버 → IPFS (디스크 저장 없음)
+// Client → Server → IPFS (no disk write)
 req.pipe(ipfs.stdin);
 ```
 
-이 방식의 장점:
-- 서버 디스크 사용량: 0 바이트
-- 업로드 후 서버에 흔적 없음
-- 법적/운영상 리스크 최소화
+Benefits:
+- Server disk usage: 0 bytes
+- No residual files after upload
+- Reduced legal/operational risk
 
-## 🔐 보안
+## 🔐 Security
 
-- CID(IPFS 콘텐츠 주소)는 데이터베이스에만 저장되고 API로 노출되지 않습니다
-- 내부 ID(`/view/abc123`)만 공개되어 직접적인 IPFS 접근을 방지합니다
-- 스트리밍은 서버를 통해서만 가능합니다
+- CIDs are stored only in the database and never exposed via API
+- Only internal IDs (e.g., `/view/abc123`) are public
+- Media is streamed only through the server
 
-## 📝 라이선스
+## 📝 License
 
 MIT License

@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { mediaApi } from '@/lib/api';
 import { formatBytes } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 
 const ACCEPTED_TYPES = {
   'video/*': ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv'],
@@ -28,6 +29,7 @@ const MAX_FILE_SIZE = 500 * 1024 * 1024; // 500MB
 
 export default function UploadPage() {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -44,7 +46,7 @@ export default function UploadPage() {
     const selectedFile = acceptedFiles[0];
     if (selectedFile) {
       if (selectedFile.size > MAX_FILE_SIZE) {
-        setUploadError('파일 크기는 500MB를 초과할 수 없습니다.');
+        setUploadError(t('upload.maxSizeError'));
         return;
       }
       setFile(selectedFile);
@@ -95,7 +97,7 @@ export default function UploadPage() {
       setUploadError(
         error instanceof Error
           ? error.message
-          : '업로드 중 오류가 발생했습니다. IPFS 데몬이 실행 중인지 확인해주세요.'
+          : t('upload.errorFallback')
       );
     } finally {
       setIsUploading(false);
@@ -119,13 +121,14 @@ export default function UploadPage() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <h1 className="text-3xl font-bold text-dark-100 mb-2">미디어 업로드</h1>
+        <h1 className="text-3xl font-bold text-dark-100 mb-2">{t('upload.title')}</h1>
         <p className="text-dark-400">
-          잊혀진 미디어를 IPFS에 영구적으로 보존하세요.
-          <br />
-          <span className="text-dark-500 text-sm">
-            파일은 서버에 저장되지 않고 직접 IPFS로 전송됩니다.
-          </span>
+          {t('upload.subtitle').split('\n').map((line, idx) => (
+            <span key={idx}>
+              {line}
+              {idx === 0 && <br />}
+            </span>
+          ))}
         </p>
       </motion.div>
 
@@ -139,12 +142,12 @@ export default function UploadPage() {
             <div className="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-6">
               <CheckCircle className="w-10 h-10 text-green-500" />
             </div>
-            <h2 className="text-2xl font-bold text-dark-100 mb-2">업로드 완료!</h2>
+            <h2 className="text-2xl font-bold text-dark-100 mb-2">{t('upload.successTitle')}</h2>
             <p className="text-dark-400 mb-6">
-              미디어가 성공적으로 IPFS에 업로드되었습니다.
+              {t('upload.successMessage')}
             </p>
             <p className="text-dark-500 text-sm">
-              잠시 후 미디어 페이지로 이동합니다...
+              {t('upload.successHint')}
             </p>
           </motion.div>
         ) : (
@@ -191,10 +194,10 @@ export default function UploadPage() {
                     <Upload className="w-8 h-8 text-dark-400" />
                   </div>
                   <p className="text-dark-200 font-medium mb-1">
-                    {isDragActive ? '파일을 여기에 놓으세요' : '파일을 드래그하거나 클릭하여 선택'}
+                    {isDragActive ? t('upload.dropActive') : t('upload.drop')}
                   </p>
                   <p className="text-dark-500 text-sm">
-                    영상, 이미지, 오디오, PDF (최대 500MB)
+                    {t('upload.fileTypes')}
                   </p>
                 </>
               )}
@@ -204,13 +207,13 @@ export default function UploadPage() {
             <div className="glass-card p-6 space-y-5">
               <div>
                 <label className="block text-sm font-medium text-dark-200 mb-2">
-                  제목 <span className="text-red-500">*</span>
+                  {t('upload.fields.title')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="미디어 제목을 입력하세요"
+                  placeholder={t('upload.placeholders.title')}
                   className="input"
                   required
                 />
@@ -218,12 +221,12 @@ export default function UploadPage() {
 
               <div>
                 <label className="block text-sm font-medium text-dark-200 mb-2">
-                  설명
+                  {t('upload.fields.description')}
                 </label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="미디어에 대한 설명을 입력하세요"
+                  placeholder={t('upload.placeholders.description')}
                   rows={4}
                   className="input resize-none"
                 />
@@ -231,26 +234,26 @@ export default function UploadPage() {
 
               <div>
                 <label className="block text-sm font-medium text-dark-200 mb-2">
-                  태그
+                  {t('upload.fields.tags')}
                 </label>
                 <input
                   type="text"
                   value={tags}
                   onChange={(e) => setTags(e.target.value)}
-                  placeholder="태그를 쉼표로 구분하여 입력 (예: 광고, 90년대, TV)"
+                  placeholder={t('upload.placeholders.tags')}
                   className="input"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-dark-200 mb-2">
-                  출처 정보
+                  {t('upload.fields.source')}
                 </label>
                 <input
                   type="text"
                   value={sourceInfo}
                   onChange={(e) => setSourceInfo(e.target.value)}
-                  placeholder="원본 출처나 관련 정보를 입력하세요"
+                  placeholder={t('upload.placeholders.source')}
                   className="input"
                 />
               </div>
@@ -258,7 +261,7 @@ export default function UploadPage() {
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-dark-200 mb-2">
-                    유실 추정일
+                    {t('upload.fields.lostDate')}
                   </label>
                   <input
                     type="date"
@@ -269,7 +272,7 @@ export default function UploadPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-dark-200 mb-2">
-                    발견일
+                    {t('upload.fields.foundDate')}
                   </label>
                   <input
                     type="date"
@@ -297,7 +300,7 @@ export default function UploadPage() {
             {isUploading && (
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-dark-400">업로드 중...</span>
+                  <span className="text-dark-400">{t('upload.uploading')}</span>
                   <span className="text-dark-300">{uploadProgress}%</span>
                 </div>
                 <div className="h-2 bg-dark-800 rounded-full overflow-hidden">
@@ -319,23 +322,23 @@ export default function UploadPage() {
               {isUploading ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  업로드 중...
+                  {t('upload.uploading')}
                 </>
               ) : (
                 <>
                   <Upload className="w-5 h-5" />
-                  IPFS에 업로드
+                  {t('upload.upload')}
                 </>
               )}
             </button>
 
             {/* Info Box */}
             <div className="glass-card p-4 text-sm text-dark-400">
-              <p className="font-medium text-dark-300 mb-2">📌 안내사항</p>
+              <p className="font-medium text-dark-300 mb-2">{t('upload.infoTitle')}</p>
               <ul className="space-y-1 list-disc list-inside">
-                <li>파일은 서버 디스크에 저장되지 않고 직접 IPFS로 스트리밍됩니다.</li>
-                <li>업로드된 콘텐츠는 분산 네트워크에 영구적으로 저장됩니다.</li>
-                <li>CID(콘텐츠 주소)는 외부에 노출되지 않습니다.</li>
+                <li>{t('upload.info1')}</li>
+                <li>{t('upload.info2')}</li>
+                <li>{t('upload.info3')}</li>
               </ul>
             </div>
           </motion.form>

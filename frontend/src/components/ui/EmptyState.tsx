@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { FolderOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useI18n } from '@/lib/i18n';
 
 interface EmptyStateProps {
   title?: string;
@@ -10,11 +11,16 @@ interface EmptyStateProps {
 }
 
 export default function EmptyState({
-  title = '콘텐츠가 없습니다',
-  message = '아직 등록된 미디어가 없습니다.',
-  actionLabel = '업로드하기',
+  title,
+  message,
+  actionLabel,
   actionLink = '/upload',
 }: EmptyStateProps) {
+  const { t } = useI18n();
+  const resolvedTitle = title ?? t('common.emptyTitle');
+  const resolvedMessage = message ?? t('common.emptyMessage');
+  const resolvedActionLabel = actionLabel ?? t('common.upload');
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -24,10 +30,10 @@ export default function EmptyState({
       <div className="w-20 h-20 rounded-2xl bg-dark-800 flex items-center justify-center mb-4">
         <FolderOpen className="w-10 h-10 text-dark-500" />
       </div>
-      <h3 className="text-xl font-semibold text-dark-100 mb-2">{title}</h3>
-      <p className="text-dark-400 text-center max-w-md mb-6">{message}</p>
+      <h3 className="text-xl font-semibold text-dark-100 mb-2">{resolvedTitle}</h3>
+      <p className="text-dark-400 text-center max-w-md mb-6">{resolvedMessage}</p>
       <Link to={actionLink} className="btn btn-primary">
-        {actionLabel}
+        {resolvedActionLabel}
       </Link>
     </motion.div>
   );

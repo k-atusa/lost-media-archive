@@ -4,6 +4,7 @@ import { Eye, Calendar, Play, Image as ImageIcon, Music, FileText } from 'lucide
 import type { Media } from '@/types';
 import { formatRelativeTime, formatViewCount, formatBytes, parseTags, cn } from '@/lib/utils';
 import { mediaApi } from '@/lib/api';
+import { useI18n } from '@/lib/i18n';
 
 interface MediaCardProps {
   media: Media;
@@ -18,6 +19,7 @@ const mediaTypeIcons = {
 };
 
 export default function MediaCard({ media, index = 0 }: MediaCardProps) {
+  const { t } = useI18n();
   const Icon = mediaTypeIcons[media.media_type] || FileText;
   const tags = parseTags(media.tags);
   const isVideo = media.media_type === 'video';
@@ -66,10 +68,10 @@ export default function MediaCard({ media, index = 0 }: MediaCardProps) {
               media.media_type === 'document' && "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
             )}>
               <Icon className="w-3 h-3 mr-1" />
-              {media.media_type === 'video' && '영상'}
-              {media.media_type === 'image' && '이미지'}
-              {media.media_type === 'audio' && '오디오'}
-              {media.media_type === 'document' && '문서'}
+              {media.media_type === 'video' && t('media.video')}
+              {media.media_type === 'image' && t('media.image')}
+              {media.media_type === 'audio' && t('media.audio')}
+              {media.media_type === 'document' && t('media.document')}
             </span>
           </div>
 

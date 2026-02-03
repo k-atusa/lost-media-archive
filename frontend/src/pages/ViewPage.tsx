@@ -19,9 +19,11 @@ import { mediaApi } from '@/lib/api';
 import { LoadingPage } from '@/components/ui/LoadingSpinner';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 import { formatBytes, formatDate, formatRelativeTime, formatViewCount, parseTags, cn } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 
 export default function ViewPage() {
   const { id } = useParams<{ id: string }>();
+  const { t } = useI18n();
 
   const {
     data: media,
@@ -38,8 +40,8 @@ export default function ViewPage() {
   if (error || !media) {
     return (
       <ErrorMessage
-        title="미디어를 찾을 수 없습니다"
-        message="요청하신 미디어가 존재하지 않거나 접근이 제한되었습니다."
+        title={t('view.notFoundTitle')}
+        message={t('view.notFoundMessage')}
         onRetry={refetch}
       />
     );
@@ -82,7 +84,7 @@ export default function ViewPage() {
           className="inline-flex items-center gap-2 text-dark-400 hover:text-dark-200 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>목록으로</span>
+          <span>{t('common.backToList')}</span>
         </Link>
       </motion.div>
 
@@ -134,7 +136,7 @@ export default function ViewPage() {
                 <div className="w-24 h-24 rounded-2xl bg-dark-800 flex items-center justify-center mx-auto mb-4">
                   <FileText className="w-12 h-12 text-yellow-500" />
                 </div>
-                <p className="text-dark-400 mb-4">문서 미리보기를 지원하지 않습니다.</p>
+                <p className="text-dark-400 mb-4">{t('view.documentPreview')}</p>
                 <a
                   href={streamUrl}
                   target="_blank"
@@ -142,7 +144,7 @@ export default function ViewPage() {
                   className="btn btn-primary"
                 >
                   <Download className="w-4 h-4" />
-                  문서 열기
+                  {t('view.openDocument')}
                 </a>
               </div>
             )}
@@ -162,7 +164,7 @@ export default function ViewPage() {
               <div className="flex flex-wrap items-center gap-4 text-sm text-dark-400">
                 <span className="flex items-center gap-1">
                   <Eye className="w-4 h-4" />
-                  조회수 {formatViewCount(media.view_count)}
+                  {t('view.views')} {formatViewCount(media.view_count)}
                 </span>
                 <span className="flex items-center gap-1">
                   <Calendar className="w-4 h-4" />
@@ -174,7 +176,7 @@ export default function ViewPage() {
             <div className="flex items-center gap-2">
               <button onClick={handleShare} className="btn btn-secondary">
                 <Share2 className="w-4 h-4" />
-                공유
+                {t('common.share')}
               </button>
             </div>
           </motion.div>
@@ -187,7 +189,7 @@ export default function ViewPage() {
               transition={{ delay: 0.2 }}
               className="glass-card p-6"
             >
-              <h2 className="text-lg font-semibold text-dark-100 mb-3">설명</h2>
+              <h2 className="text-lg font-semibold text-dark-100 mb-3">{t('view.description')}</h2>
               <p className="text-dark-300 whitespace-pre-wrap leading-relaxed">
                 {media.description}
               </p>
@@ -206,12 +208,12 @@ export default function ViewPage() {
           <div className="glass-card p-6">
             <h2 className="text-lg font-semibold text-dark-100 mb-4 flex items-center gap-2">
               <Info className="w-5 h-5 text-primary-400" />
-              미디어 정보
+              {t('view.info')}
             </h2>
 
             <div className="space-y-4">
               <div className="flex justify-between items-center py-2 border-b border-dark-800">
-                <span className="text-dark-400">유형</span>
+                <span className="text-dark-400">{t('view.type')}</span>
                 <span className={cn(
                   "tag",
                   media.media_type === 'video' && "bg-red-500/20 text-red-400 border-red-500/30",
@@ -223,40 +225,40 @@ export default function ViewPage() {
                   {media.media_type === 'image' && <ImageIcon className="w-3 h-3 mr-1" />}
                   {media.media_type === 'audio' && <Music className="w-3 h-3 mr-1" />}
                   {media.media_type === 'document' && <FileText className="w-3 h-3 mr-1" />}
-                  {media.media_type === 'video' && '영상'}
-                  {media.media_type === 'image' && '이미지'}
-                  {media.media_type === 'audio' && '오디오'}
-                  {media.media_type === 'document' && '문서'}
+                  {media.media_type === 'video' && t('media.video')}
+                  {media.media_type === 'image' && t('media.image')}
+                  {media.media_type === 'audio' && t('media.audio')}
+                  {media.media_type === 'document' && t('media.document')}
                 </span>
               </div>
 
               {media.file_size && (
                 <div className="flex justify-between items-center py-2 border-b border-dark-800">
-                  <span className="text-dark-400">파일 크기</span>
+                  <span className="text-dark-400">{t('view.size')}</span>
                   <span className="text-dark-200">{formatBytes(media.file_size)}</span>
                 </div>
               )}
 
               <div className="flex justify-between items-center py-2 border-b border-dark-800">
-                <span className="text-dark-400">MIME 타입</span>
+                <span className="text-dark-400">{t('view.mime')}</span>
                 <span className="text-dark-200 text-sm font-mono">{media.mime_type}</span>
               </div>
 
               <div className="flex justify-between items-center py-2 border-b border-dark-800">
-                <span className="text-dark-400">등록일</span>
+                <span className="text-dark-400">{t('view.createdAt')}</span>
                 <span className="text-dark-200">{formatDate(media.created_at)}</span>
               </div>
 
               {media.lost_date && (
                 <div className="flex justify-between items-center py-2 border-b border-dark-800">
-                  <span className="text-dark-400">유실 추정일</span>
+                  <span className="text-dark-400">{t('view.lostDate')}</span>
                   <span className="text-dark-200">{formatDate(media.lost_date)}</span>
                 </div>
               )}
 
               {media.found_date && (
                 <div className="flex justify-between items-center py-2 border-b border-dark-800">
-                  <span className="text-dark-400">발견일</span>
+                  <span className="text-dark-400">{t('view.foundDate')}</span>
                   <span className="text-dark-200">{formatDate(media.found_date)}</span>
                 </div>
               )}
@@ -268,7 +270,7 @@ export default function ViewPage() {
             <div className="glass-card p-6">
               <h2 className="text-lg font-semibold text-dark-100 mb-3 flex items-center gap-2">
                 <Clock className="w-5 h-5 text-primary-400" />
-                출처 정보
+                {t('view.sourceInfo')}
               </h2>
               <p className="text-dark-300 text-sm">{media.source_info}</p>
             </div>
@@ -279,7 +281,7 @@ export default function ViewPage() {
             <div className="glass-card p-6">
               <h2 className="text-lg font-semibold text-dark-100 mb-4 flex items-center gap-2">
                 <Tag className="w-5 h-5 text-primary-400" />
-                태그
+                {t('view.tags')}
               </h2>
               <div className="flex flex-wrap gap-2">
                 {tags.map((tag) => (
@@ -297,10 +299,14 @@ export default function ViewPage() {
 
           {/* IPFS Info */}
           <div className="glass-card p-6 bg-gradient-to-br from-primary-500/5 to-purple-500/5">
-            <h2 className="text-lg font-semibold text-dark-100 mb-3">🔐 분산 저장</h2>
+            <h2 className="text-lg font-semibold text-dark-100 mb-3">{t('view.distributed')}</h2>
             <p className="text-dark-400 text-sm leading-relaxed">
-              이 콘텐츠는 IPFS 네트워크에 분산 저장되어 있습니다.
-              CID(콘텐츠 주소)는 보안을 위해 공개되지 않습니다.
+              {t('view.distributedText').split('\n').map((line, idx) => (
+                <span key={idx}>
+                  {line}
+                  {idx === 0 && <br />}
+                </span>
+              ))}
             </p>
           </div>
         </motion.div>

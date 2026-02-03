@@ -2,9 +2,11 @@ import { Link } from 'react-router-dom';
 import { Film, Search, Upload, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useI18n } from '@/lib/i18n';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { t, lang, toggleLanguage } = useI18n();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-dark-700/50">
@@ -24,13 +26,13 @@ export default function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-1">
             <Link to="/browse" className="btn btn-ghost">
-              탐색
+              {t('nav.browse')}
             </Link>
             <Link to="/collections" className="btn btn-ghost">
-              컬렉션
+              {t('nav.collections')}
             </Link>
             <Link to="/about" className="btn btn-ghost">
-              소개
+              {t('nav.about')}
             </Link>
           </div>
 
@@ -41,8 +43,17 @@ export default function Navbar() {
             </Link>
             <Link to="/upload" className="btn btn-primary">
               <Upload className="w-4 h-4" />
-              <span className="hidden sm:inline">업로드</span>
+              <span className="hidden sm:inline">{t('nav.upload')}</span>
             </Link>
+
+            <button
+              onClick={toggleLanguage}
+              className="btn btn-secondary px-3"
+              aria-label={t('nav.language')}
+              title={t('nav.language')}
+            >
+              {lang === 'ko' ? 'EN' : 'KO'}
+            </button>
 
             {/* Mobile Menu Button */}
             <button
@@ -70,22 +81,28 @@ export default function Navbar() {
                 className="block btn btn-ghost w-full justify-start"
                 onClick={() => setIsMenuOpen(false)}
               >
-                탐색
+                {t('nav.browse')}
               </Link>
               <Link
                 to="/collections"
                 className="block btn btn-ghost w-full justify-start"
                 onClick={() => setIsMenuOpen(false)}
               >
-                컬렉션
+                {t('nav.collections')}
               </Link>
               <Link
                 to="/about"
                 className="block btn btn-ghost w-full justify-start"
                 onClick={() => setIsMenuOpen(false)}
               >
-                소개
+                {t('nav.about')}
               </Link>
+              <button
+                onClick={toggleLanguage}
+                className="block btn btn-secondary w-full justify-start"
+              >
+                {lang === 'ko' ? 'EN' : 'KO'}
+              </button>
             </div>
           </motion.div>
         )}

@@ -6,8 +6,10 @@ import { mediaApi } from '@/lib/api';
 import MediaCard from '@/components/media/MediaCard';
 import { LoadingCard } from '@/components/ui/LoadingSpinner';
 import { formatViewCount } from '@/lib/utils';
+import { useI18n } from '@/lib/i18n';
 
 export default function HomePage() {
+  const { t } = useI18n();
   const { data: recentMedia, isLoading: loadingRecent } = useQuery({
     queryKey: ['media', 'recent'],
     queryFn: () => mediaApi.getRecent(8),
@@ -46,29 +48,32 @@ export default function HomePage() {
           >
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-sm font-medium mb-8">
               <Shield className="w-4 h-4" />
-              IPFS 기반 분산 저장소
+              {t('home.badge')}
             </span>
 
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 tracking-tight">
-              <span className="text-dark-100">잊혀진 미디어를</span>
+              <span className="text-dark-100">{t('home.title1')}</span>
               <br />
-              <span className="gradient-text">영원히 보존합니다</span>
+              <span className="gradient-text">{t('home.title2')}</span>
             </h1>
 
             <p className="text-xl text-dark-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-              Lost Media Archive는 사라진 영상, 이미지, 오디오를
-              <br className="hidden sm:block" />
-              분산 네트워크에 영구적으로 보존하는 아카이브입니다.
+              {t('home.subtitle').split('\n').map((line, idx) => (
+                <span key={idx}>
+                  {line}
+                  {idx === 0 && <br className="hidden sm:block" />}
+                </span>
+              ))}
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-4">
               <Link to="/browse" className="btn btn-primary px-8 py-3 text-lg">
-                아카이브 탐색
+                {t('home.explore')}
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <Link to="/upload" className="btn btn-secondary px-8 py-3 text-lg">
                 <Upload className="w-5 h-5" />
-                미디어 기여하기
+                {t('home.contribute')}
               </Link>
             </div>
           </motion.div>
@@ -83,19 +88,19 @@ export default function HomePage() {
             >
               <div className="glass-card p-6">
                 <div className="text-3xl font-bold gradient-text">{stats.totalMedia}</div>
-                <div className="text-dark-400 text-sm">총 미디어</div>
+                <div className="text-dark-400 text-sm">{t('home.statsTotal')}</div>
               </div>
               <div className="glass-card p-6">
                 <div className="text-3xl font-bold text-dark-100">{formatViewCount(stats.totalViews)}</div>
-                <div className="text-dark-400 text-sm">총 조회수</div>
+                <div className="text-dark-400 text-sm">{t('home.statsViews')}</div>
               </div>
               <div className="glass-card p-6">
                 <div className="text-3xl font-bold text-dark-100">{stats.byType?.video || 0}</div>
-                <div className="text-dark-400 text-sm">영상</div>
+                <div className="text-dark-400 text-sm">{t('home.statsVideo')}</div>
               </div>
               <div className="glass-card p-6">
                 <div className="text-3xl font-bold text-dark-100">{stats.byType?.image || 0}</div>
-                <div className="text-dark-400 text-sm">이미지</div>
+                <div className="text-dark-400 text-sm">{t('home.statsImage')}</div>
               </div>
             </motion.div>
           )}
@@ -112,10 +117,10 @@ export default function HomePage() {
             className="text-center mb-16"
           >
             <h2 className="text-3xl sm:text-4xl font-bold text-dark-100 mb-4">
-              왜 Lost Media Archive인가?
+              {t('home.whyTitle')}
             </h2>
             <p className="text-dark-400 max-w-2xl mx-auto">
-              기존 플랫폼과 달리 분산 저장 방식으로 검열에 강하고 영구적인 보존이 가능합니다.
+              {t('home.whySubtitle')}
             </p>
           </motion.div>
 
@@ -123,18 +128,18 @@ export default function HomePage() {
             {[
               {
                 icon: Globe,
-                title: '분산 저장',
-                description: 'IPFS 네트워크를 통해 전 세계에 분산 저장되어 단일 장애점이 없습니다.',
+                title: t('home.features.distributed.title'),
+                description: t('home.features.distributed.desc'),
               },
               {
                 icon: Shield,
-                title: '검열 저항',
-                description: '중앙 서버가 없어 특정 주체에 의한 삭제나 검열이 불가능합니다.',
+                title: t('home.features.censorship.title'),
+                description: t('home.features.censorship.desc'),
               },
               {
                 icon: Zap,
-                title: '개인정보 보호',
-                description: 'CID를 숨기고 내부 ID만 노출하여 콘텐츠 추적을 방지합니다.',
+                title: t('home.features.privacy.title'),
+                description: t('home.features.privacy.desc'),
               },
             ].map((feature, index) => (
               <motion.div
@@ -165,10 +170,10 @@ export default function HomePage() {
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 flex items-center justify-center">
                   <TrendingUp className="w-5 h-5 text-yellow-500" />
                 </div>
-                <h2 className="text-2xl font-bold text-dark-100">인기 콘텐츠</h2>
+                <h2 className="text-2xl font-bold text-dark-100">{t('home.popular')}</h2>
               </div>
               <Link to="/browse?sortBy=view_count" className="btn btn-ghost text-sm">
-                전체보기
+                {t('common.viewAll')}
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
@@ -192,10 +197,10 @@ export default function HomePage() {
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center">
                 <Clock className="w-5 h-5 text-blue-500" />
               </div>
-              <h2 className="text-2xl font-bold text-dark-100">최근 추가</h2>
+              <h2 className="text-2xl font-bold text-dark-100">{t('home.recent')}</h2>
             </div>
             <Link to="/browse" className="btn btn-ghost text-sm">
-              전체보기
+              {t('common.viewAll')}
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -210,9 +215,9 @@ export default function HomePage() {
 
           {(!recentMedia || recentMedia.length === 0) && !loadingRecent && (
             <div className="text-center py-16">
-              <p className="text-dark-400 mb-6">아직 등록된 미디어가 없습니다.</p>
+              <p className="text-dark-400 mb-6">{t('home.noMedia')}</p>
               <Link to="/upload" className="btn btn-primary">
-                첫 번째 미디어 업로드하기
+                {t('home.uploadFirst')}
               </Link>
             </div>
           )}
@@ -228,16 +233,16 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl font-bold text-dark-100 mb-4">카테고리별 탐색</h2>
-            <p className="text-dark-400">원하는 미디어 유형을 선택하여 탐색하세요.</p>
+            <h2 className="text-3xl font-bold text-dark-100 mb-4">{t('home.categoryTitle')}</h2>
+            <p className="text-dark-400">{t('home.categorySubtitle')}</p>
           </motion.div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { type: 'video', icon: Play, label: '영상', color: 'from-red-500 to-pink-500', count: stats?.byType?.video },
-              { type: 'image', icon: ImageIcon, label: '이미지', color: 'from-blue-500 to-cyan-500', count: stats?.byType?.image },
-              { type: 'audio', icon: Music, label: '오디오', color: 'from-green-500 to-emerald-500', count: stats?.byType?.audio },
-              { type: 'document', icon: Play, label: '문서', color: 'from-yellow-500 to-orange-500', count: stats?.byType?.document },
+              { type: 'video', icon: Play, label: t('media.video'), color: 'from-red-500 to-pink-500', count: stats?.byType?.video },
+              { type: 'image', icon: ImageIcon, label: t('media.image'), color: 'from-blue-500 to-cyan-500', count: stats?.byType?.image },
+              { type: 'audio', icon: Music, label: t('media.audio'), color: 'from-green-500 to-emerald-500', count: stats?.byType?.audio },
+              { type: 'document', icon: Play, label: t('media.document'), color: 'from-yellow-500 to-orange-500', count: stats?.byType?.document },
             ].map((item, index) => (
               <motion.div
                 key={item.type}
@@ -255,7 +260,7 @@ export default function HomePage() {
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-dark-100">{item.label}</h3>
-                    <p className="text-dark-500 text-sm">{item.count || 0}개의 파일</p>
+                    <p className="text-dark-500 text-sm">{item.count || 0}{t('home.categoryCount')}</p>
                   </div>
                 </Link>
               </motion.div>
@@ -276,16 +281,19 @@ export default function HomePage() {
             <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 to-purple-500/5" />
             <div className="relative">
               <h2 className="text-3xl sm:text-4xl font-bold text-dark-100 mb-4">
-                잊혀진 미디어를 발견하셨나요?
+                {t('home.ctaTitle')}
               </h2>
               <p className="text-dark-400 max-w-2xl mx-auto mb-8">
-                소중한 미디어를 아카이브에 기여해주세요.
-                <br />
-                당신의 기여가 디지털 역사를 보존합니다.
+                {t('home.ctaSubtitle').split('\n').map((line, idx) => (
+                  <span key={idx}>
+                    {line}
+                    {idx === 0 && <br />}
+                  </span>
+                ))}
               </p>
               <Link to="/upload" className="btn btn-primary px-8 py-3 text-lg">
                 <Upload className="w-5 h-5" />
-                미디어 업로드하기
+                {t('home.ctaButton')}
               </Link>
             </div>
           </motion.div>

@@ -22,22 +22,16 @@ import EmptyState from '@/components/ui/EmptyState';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 import { cn } from '@/lib/utils';
 import type { Media } from '@/types';
-
-const MEDIA_TYPES = [
-  { value: undefined, label: '전체', icon: null },
-  { value: 'video' as const, label: '영상', icon: Play },
-  { value: 'image' as const, label: '이미지', icon: ImageIcon },
-  { value: 'audio' as const, label: '오디오', icon: Music },
-  { value: 'document' as const, label: '문서', icon: FileText },
-];
+import { useI18n } from '@/lib/i18n';
 
 const SORT_OPTIONS = [
-  { value: 'created_at', label: '등록일순' },
-  { value: 'view_count', label: '조회수순' },
-  { value: 'title', label: '제목순' },
+  { value: 'created_at', key: 'browse.sortByDate' },
+  { value: 'view_count', key: 'browse.sortByViews' },
+  { value: 'title', key: 'browse.sortByTitle' },
 ];
 
 export default function BrowsePage() {
+  const { t } = useI18n();
   const [searchParams, setSearchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
@@ -95,9 +89,9 @@ export default function BrowsePage() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <h1 className="text-3xl font-bold text-dark-100 mb-2">아카이브 탐색</h1>
+        <h1 className="text-3xl font-bold text-dark-100 mb-2">{t('browse.title')}</h1>
         <p className="text-dark-400">
-          {data?.total || 0}개의 미디어가 보관되어 있습니다.
+          {data?.total || 0} {t('browse.total')}
         </p>
       </motion.div>
 
@@ -115,7 +109,7 @@ export default function BrowsePage() {
             type="text"
             name="search"
             defaultValue={search}
-            placeholder="제목, 설명, 태그로 검색..."
+            placeholder={t('common.searchPlaceholder')}
             className="input pl-12 pr-20"
           />
           {search && (
@@ -131,7 +125,7 @@ export default function BrowsePage() {
             type="submit"
             className="absolute right-2 top-1/2 -translate-y-1/2 btn btn-primary py-2 px-4"
           >
-            검색
+            {t('common.search')}
           </button>
         </form>
 
@@ -140,7 +134,13 @@ export default function BrowsePage() {
           {/* Type Filter */}
           <div className="flex items-center gap-2 flex-wrap">
             <Filter className="w-4 h-4 text-dark-500" />
-            {MEDIA_TYPES.map((mediaType) => (
+            {[
+              { value: undefined, label: t('browse.all'), icon: null },
+              { value: 'video' as const, label: t('browse.video'), icon: Play },
+              { value: 'image' as const, label: t('browse.image'), icon: ImageIcon },
+              { value: 'audio' as const, label: t('browse.audio'), icon: Music },
+              { value: 'document' as const, label: t('browse.document'), icon: FileText },
+            ].map((mediaType) => (
               <button
                 key={mediaType.label}
                 onClick={() => updateParams({ type: mediaType.value })}
@@ -166,7 +166,7 @@ export default function BrowsePage() {
             >
               {SORT_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
-                  {option.label}
+                  {t(option.key)}
                 </option>
               ))}
             </select>
@@ -174,7 +174,7 @@ export default function BrowsePage() {
             <button
               onClick={() => updateParams({ sortOrder: sortOrder === 'desc' ? 'asc' : 'desc' })}
               className="btn btn-ghost p-2"
-              title={sortOrder === 'desc' ? '오름차순' : '내림차순'}
+              title={sortOrder === 'desc' ? t('browse.ascending') : t('browse.descending')}
             >
               {sortOrder === 'desc' ? (
                 <SortDesc className="w-5 h-5" />
@@ -203,7 +203,7 @@ export default function BrowsePage() {
         {/* Active Search */}
         {search && (
           <div className="mt-4 flex items-center gap-2 text-sm">
-            <span className="text-dark-400">검색어:</span>
+            <span className="text-dark-400">{t('browse.searchLabel')}</span>
             <span className="tag tag-primary">
               "{search}"
               <button onClick={clearSearch} className="ml-1">
@@ -230,19 +230,19 @@ export default function BrowsePage() {
         </div>
       ) : error ? (
         <ErrorMessage
-          title="미디어 로드 실패"
-          message="미디어 목록을 불러오는 데 실패했습니다."
+          title={t('browse.loadErrorTitle')}
+          message={t('browse.loadErrorMessage')}
           onRetry={refetch}
         />
       ) : data?.data.length === 0 ? (
         <EmptyState
-          title="검색 결과가 없습니다"
+          title={t('browse.noResultsTitle')}
           message={
             search
-              ? `"${search}"에 대한 검색 결과가 없습니다.`
-              : '해당 조건에 맞는 미디어가 없습니다.'
+              ? `"${search}" ${t('browse.noResultsSearch')}`
+              : t('browse.noResultsMessage')
           }
-          actionLabel="필터 초기화"
+          actionLabel={t('browse.resetFilters')}
           actionLink="/browse"
         />
       ) : (
@@ -274,7 +274,7 @@ export default function BrowsePage() {
                 disabled={page === 1}
                 className="btn btn-secondary disabled:opacity-50"
               >
-                이전
+                {t('common.previous')}
               </button>
 
               <div className="flex items-center gap-1">
@@ -312,7 +312,7 @@ export default function BrowsePage() {
                 disabled={page === data.totalPages}
                 className="btn btn-secondary disabled:opacity-50"
               >
-                다음
+                {t('common.next')}
               </button>
             </motion.div>
           )}
