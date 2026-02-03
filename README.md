@@ -69,6 +69,17 @@ npm install
 npm run dev
 ```
 
+## 🐳 Docker
+
+```bash
+docker compose up --build
+```
+
+- Frontend: http://localhost:8080
+- Backend: http://localhost:3001
+- IPFS Gateway: http://localhost:8081
+- IPFS API: http://localhost:5001
+
 ## 🔧 API Endpoints
 
 ### Media
